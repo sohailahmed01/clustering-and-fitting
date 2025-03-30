@@ -53,6 +53,8 @@ def preprocessing(df):
     """Clean and prepare data."""
     df=df.dropna().reset_index(drop=True)
     print("\nData preview:")
+    print(df.head())
+    print(df.describe())
     print(df[['Country or region','Score','GDP per capita']].head(3))
     return df
 
@@ -86,6 +88,8 @@ def perform_clustering(df,col1,col2):
         labels=kmeans.fit_predict(data)
         inertias.append(kmeans.inertia_)
         sil_scores.append(silhouette_score(data, labels))
+      
+    print(f'Best Silhouette Score: {max(sil_scores):.2f}')
     
     # Plot elbow
     plt.figure(figsize=(10,6))
@@ -121,7 +125,7 @@ def perform_fitting(df,x_col,y_col):
     x=df[x_col].values
     y=df[y_col].values
     slope,intercept,r_value,p_value,std_err=linregress(x,y)
-    y_pred=slope * x + intercept
+    y_pred=slope*x +intercept
     
     print(f'\nRegression Results ({x_col} vs {y_col}):')
     print(f'Slope: {slope:.2f},Intercept: {intercept:.2f}')
@@ -142,8 +146,8 @@ def plot_fitted_data(data,x,y_pred):
     plt.show()
 
 def main():
-    df=pd.read_csv('data (2).csv')
-    df=preprocessing(df)
+    df = pd.read_csv('data.csv')
+    df = preprocessing(df)
     
     # Visualizations
     plot_relational_plot(df)
