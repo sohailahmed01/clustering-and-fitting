@@ -142,7 +142,7 @@ def plot_fitted_data(data,x,y_pred):
     plt.show()
 
 def main():
-    df=pd.read_csv('data.csv')
+    df=pd.read_csv('data (2).csv')
     df=preprocessing(df)
     
     # Visualizations
