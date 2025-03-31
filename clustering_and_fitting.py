@@ -8,6 +8,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 def plot_relational_plot(df):
+    """Generates a scatter plot of GDP per capita against Happiness Score"""
     plt.figure(figsize=(12,7))
     sns.scatterplot(data=df,x='GDP per capita',y='Score',hue='Score',palette='plasma',edgecolor='black',s=120)
     plt.title('GDP per Capita vs Happiness Score (2019)',fontsize=16,fontweight='bold')
@@ -19,6 +20,7 @@ def plot_relational_plot(df):
     return
 
 def plot_categorical_plot(df):
+    """Creates a bar plot of the top 10 happiest countries based on their scores"""
     top_10=df.nlargest(10,'Score')
     plt.figure(figsize=(12,7))
     sns.barplot(x='Score',y='Country or region',data=top_10,palette='mako')
@@ -31,6 +33,7 @@ def plot_categorical_plot(df):
     return
 
 def plot_statistical_plot(df):
+    """Produces a heatmap showing the correlation matrix of numeric features"""
     numeric_cols=df.select_dtypes(include=np.number)
     plt.figure(figsize=(12,8))
     sns.heatmap(numeric_cols.corr(),annot=True,cmap='coolwarm',fmt=".2f",linewidths=1,linecolor='black',square=True,cbar_kws={'shrink':0.75})
@@ -40,6 +43,7 @@ def plot_statistical_plot(df):
     return
 
 def statistical_analysis(df,col:str):
+    """Computes statistical moments (mean,std dev,skewness,kurtosis) for a specified column"""
     mean=df[col].mean()
     stddev=df[col].std()
     skew=ss.skew(df[col])
@@ -47,6 +51,7 @@ def statistical_analysis(df,col:str):
     return mean,stddev,skew,excess_kurtosis
 
 def preprocessing(df):
+    """Performs data preprocessing and displays dataset summaries and statistics"""
     print("Dataset Head:\n",df.head())
     print("\nDataset Tail:\n",df.tail())
     print("\nDescriptive Statistics:\n",df.describe())
@@ -60,6 +65,7 @@ def preprocessing(df):
     return df
 
 def writing(moments,col):
+    """Prints formatted statistical analysis results including skewness and kurtosis interpretation"""
     mean,std,skew,kurt=moments
     print(f'For the attribute {col}:')
     print(f'Mean = {mean:.2f},Standard Deviation = {std:.2f},Skewness = {skew:.2f},and Excess Kurtosis = {kurt:.2f}.')
@@ -69,6 +75,7 @@ def writing(moments,col):
     return
 
 def perform_clustering(df, col1, col2):
+    """Executes K-means clustering on specified features and determines optimal cluster count using elbow method"""
     scaler=StandardScaler()
     data=scaler.fit_transform(df[[col1,col2]])
     inertias=[]
@@ -114,6 +121,7 @@ def perform_clustering(df, col1, col2):
     return labels, data, xkmeans, ykmeans, cenlabels
 
 def plot_clustered_data(labels, data, xkmeans, ykmeans, centre_labels):
+    """Plots clustered data points and centroids resulting from K-means clustering"""
     plt.figure(figsize=(12,7))
     plt.scatter(data[:,0], data[:,1], c=labels, cmap='viridis', alpha=0.8, 
                 edgecolors='black', s=100, label='Data Points')
@@ -132,6 +140,7 @@ def plot_clustered_data(labels, data, xkmeans, ykmeans, centre_labels):
     return
 
 def perform_fitting(df, col1, col2):
+    """Fits a linear regression model between two specified features and returns fitted data"""
     scaler = StandardScaler()
     X = scaler.fit_transform(df[[col1]])
     y = df[col2].values
@@ -144,6 +153,7 @@ def perform_fitting(df, col1, col2):
     return data, x_fit_orig, y_fit
 
 def plot_fitted_data(data, x, y):
+    """Visualizes the linear regression fit between two features with actual data points and regression line"""
     plt.figure(figsize=(12,7))
     plt.scatter(data[:,0], data[:,1], alpha=0.7, edgecolors='black', s=100, label='Actual Data')
     plt.plot(x, y, color='red', linewidth=3, label='Regression Line')
