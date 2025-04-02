@@ -23,7 +23,7 @@ def plot_categorical_plot(df):
     """Creates a bar plot of the top 10 happiest countries based on their scores"""
     top_10=df.nlargest(10,'Score')
     plt.figure(figsize=(12,7))
-    sns.barplot(x='Score',y='Country or region',data=top_10,palette='mako')
+    sns.barplot(x='Score',y='Country or region',data=top_10,palette='viridis')
     plt.title('Top 10 Happiest Countries (2019)',fontsize=16,fontweight='bold')
     plt.xlabel('Happiness Score',fontsize=14)
     plt.ylabel('Country',fontsize=14)
