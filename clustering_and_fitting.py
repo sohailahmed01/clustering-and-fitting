@@ -111,10 +111,10 @@ def perform_clustering(df, col1, col2):
     def plot_elbow_method():
         plt.figure(figsize=(12, 7))
         plt.plot(
-            K, inertias,marker='o', linestyle='-', color='royalblue',
-            markersize=10,markerfacecolor='red',linewidth=3
+            K, inertias, marker='o', linestyle='-', color='royalblue',
+            markersize=10, markerfacecolor='red', linewidth=3
         )
-        plt.title('Elbow Method for Optimal Cluster Number',fontsize=16,fontweight='bold')
+        plt.title('Elbow Method for Optimal Cluster Number', fontsize=16, fontweight='bold')
         plt.xlabel('Number of Clusters', fontsize=14)
         plt.ylabel('Inertia', fontsize=14)
         plt.grid(True, linestyle='--', alpha=0.6)
