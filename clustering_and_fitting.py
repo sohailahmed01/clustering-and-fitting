@@ -15,7 +15,8 @@ def plot_relational_plot(df):
         data=df, x='GDP per capita', y='Score', hue='Score',
         palette='plasma', edgecolor='black', s=120
     )
-    plt.title('GDP per Capita vs Happiness Score (2019)', fontsize=16, fontweight='bold')
+    plt.title('GDP per Capita vs Happiness Score (2019)',
+              fontsize=16, fontweight='bold')
     plt.xlabel('GDP per capita', fontsize=14)
     plt.ylabel('Happiness Score', fontsize=14)
     plt.grid(True, linestyle='--', alpha=0.6)
@@ -25,11 +26,13 @@ def plot_relational_plot(df):
 
 
 def plot_categorical_plot(df):
-    """Creates a bar plot of the top 10 happiest countries based on their scores"""
+    """Creates a bar plot of the top 10 happiest countries"""
     top_10 = df.nlargest(10, 'Score')
     plt.figure(figsize=(12, 7))
-    sns.barplot(x='Score', y='Country or region', data=top_10, palette='viridis')
-    plt.title('Top 10 Happiest Countries (2019)', fontsize=16, fontweight='bold')
+    sns.barplot(x='Score', y='Country or region', data=top_10, 
+                palette='viridis')
+    plt.title('Top 10 Happiest Countries (2019)', fontsize=16,
+              fontweight='bold')
     plt.xlabel('Happiness Score', fontsize=14)
     plt.ylabel('Country', fontsize=14)
     plt.grid(axis='x', linestyle='--', alpha=0.6)
@@ -80,13 +83,17 @@ def writing(moments, col):
     """Prints formatted statistical analysis results"""
     mean, std, skew, kurt = moments
     print(f'For the attribute {col}:')
-    print(f'Mean = {mean:.2f}, Standard Deviation = {std:.2f}, '
+    print(f'Mean = {mean:.2f}, Standard Deviation = {std:.2f},'
           f'Skewness = {skew:.2f}, and Excess Kurtosis = {kurt:.2f}.')
     skew_dir = "right" if skew > 0 else "left" if skew < 0 else "not"
-    kurt_type = "leptokurtic" if kurt > 0 else "platykurtic" if kurt < 0 else "mesokurtic"
+    if kurt > 0:
+      kurt_type = "leptokurtic"
+    elif kurt < 0:
+      kurt_type = "platykurtic"
+    else:
+      kurt_type = "mesokurtic"
     print(f'The data was {skew_dir} skewed and {kurt_type}.')
     return
-
 
 def perform_clustering(df, col1, col2):
     """Executes K-means clustering and determines optimal cluster count"""
@@ -95,7 +102,6 @@ def perform_clustering(df, col1, col2):
     inertias = []
     silhouette_scores = []
     K = range(2, 8)
-    
     for k in K:
         kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
         labels = kmeans.fit_predict(data)
@@ -114,13 +120,11 @@ def perform_clustering(df, col1, col2):
         plt.grid(True, linestyle='--', alpha=0.6)
         plt.savefig('elbow_plot.png', dpi=300, bbox_inches='tight')
         plt.show()
-    
     def one_silhouette_inertia():
         optimal_k = K[np.argmax(silhouette_scores)]
         _score = max(silhouette_scores)
         _inertia = inertias[optimal_k - 2]
         return _score, _inertia
-    
     score, inertia = one_silhouette_inertia()
     plot_elbow_method()
     
@@ -155,7 +159,8 @@ def plot_clustered_data(labels, data, xkmeans, ykmeans, centre_labels):
         )
     plt.xlabel('GDP per Capita (scaled)', fontsize=14)
     plt.ylabel('Social Support (scaled)', fontsize=14)
-    plt.title('Country Clusters by GDP & Social Support', fontsize=16, fontweight='bold')
+    plt.title('Country Clusters by GDP & Social Support',fontsize=16,
+              fontweight='bold')
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.savefig('clustering.png', dpi=300, bbox_inches='tight')
@@ -168,7 +173,7 @@ def perform_fitting(df, col1, col2):
     scaler = StandardScaler()
     X = scaler.fit_transform(df[[col1]])
     y = df[col2].values
-    slope, intercept, r_value, p_value, std_err = ss.linregress(X.flatten(), y)
+    slope, intercept, r_value, p_value,std_err = ss.linregress(X.flatten(), y)
     x_fit = np.linspace(X.min(), X.max(), 100)
     y_fit = slope * x_fit + intercept
     x_fit_orig = scaler.inverse_transform(x_fit.reshape(-1, 1)).flatten()
@@ -187,7 +192,8 @@ def plot_fitted_data(data, x, y):
     plt.plot(x, y, color='red', linewidth=3, label='Regression Line')
     plt.xlabel('GDP per Capita', fontsize=14)
     plt.ylabel('Happiness Score', fontsize=14)
-    plt.title('Linear Regression: GDP vs Happiness', fontsize=16, fontweight='bold')
+    plt.title('Linear Regression: GDP vs Happiness',
+              fontsize=16, fontweight='bold')
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.6)
     plt.savefig('fitting.png', dpi=300, bbox_inches='tight')
@@ -204,7 +210,7 @@ def main():
     plot_categorical_plot(df)
     moments = statistical_analysis(df, col)
     writing(moments, col)
-    clustering_results = perform_clustering(df, 'GDP per capita', 'Social support')
+    clustering_results=perform_clustering(df,'GDP per capita', 'Social support')
     plot_clustered_data(*clustering_results)
     fitting_results = perform_fitting(df, 'GDP per capita', 'Score')
     plot_fitted_data(*fitting_results)
